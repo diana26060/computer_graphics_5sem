@@ -7,16 +7,15 @@ class ColorConverterApp:
     def __init__(self, root):
         self.root = root
         self.root.title(
-            "Цветовые модели CMYK - RGB - HSV"
+            "Лабораторная работа: Цветовые модели (CMYK - RGB - HSV)"
         )
-        self.root.geometry("1100x480")
+        self.root.geometry("900x420")
         self.root.resizable(False, False)
 
         self.rgb_values = [0, 0, 255]
-
         self.is_updating = False
 
-        main_frame = tk.Frame(root, padx=10, pady=10)
+        main_frame = tk.Frame(root, padx=12, pady=12)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
         self.sliders = {}
@@ -31,9 +30,9 @@ class ColorConverterApp:
 
     def create_cmyk_panel(self, parent, column):
         frame = tk.LabelFrame(
-            parent, text=" Модель CMYK ", font=("Arial", 11, "bold"), padx=10, pady=10
+            parent, text=" Модель CMYK ", font=("Arial", 10, "bold"), padx=8, pady=8
         )
-        frame.grid(row=0, column=column, padx=10, sticky="nsew")
+        frame.grid(row=0, column=column, padx=6, sticky="nsew")
 
         keys = [
             ("Cyan", 100),
@@ -45,54 +44,56 @@ class ColorConverterApp:
         self.texts["cmyk"] = []
 
         for name, max_val in keys:
-            tk.Label(frame, text=f"{name} (0-{max_val}%):").pack(anchor="w")
+            tk.Label(frame, text=f"{name} (0-{max_val}%):", font=("Arial", 9)).pack(anchor="w")
             slider = tk.Scale(
                 frame,
                 from_=0,
                 to=max_val,
                 orient=tk.HORIZONTAL,
+                length=180,
                 command=self.on_cmyk_slider_changed,
             )
             slider.pack(fill=tk.X)
             self.sliders["cmyk"].append(slider)
 
-            text = tk.Entry(frame, width=15)
-            text.pack(pady=5)
+            text = tk.Entry(frame, width=15, font=("Arial", 9))
+            text.pack(pady=(2, 6))
             text.bind("<Return>", self.on_cmyk_text_changed)
             self.texts["cmyk"].append(text)
 
     def create_rgb_panel(self, parent, column):
         frame = tk.LabelFrame(
-            parent, text=" Модель RGB ", font=("Arial", 11, "bold"), padx=10, pady=10
+            parent, text=" Модель RGB ", font=("Arial", 10, "bold"), padx=8, pady=8
         )
-        frame.grid(row=0, column=column, padx=10, sticky="nsew")
+        frame.grid(row=0, column=column, padx=6, sticky="nsew")
 
         keys = [("Red", 255), ("Green", 255), ("Blue", 255)]
         self.sliders["rgb"] = []
         self.texts["rgb"] = []
 
         for name, max_val in keys:
-            tk.Label(frame, text=f"{name} (0-{max_val}):").pack(anchor="w")
+            tk.Label(frame, text=f"{name} (0-{max_val}):", font=("Arial", 9)).pack(anchor="w")
             slider = tk.Scale(
                 frame,
                 from_=0,
                 to=max_val,
                 orient=tk.HORIZONTAL,
+                length=180,
                 command=self.on_rgb_slider_changed,
             )
             slider.pack(fill=tk.X)
             self.sliders["rgb"].append(slider)
 
-            text = tk.Entry(frame, width=15)
-            text.pack(pady=5)
+            text = tk.Entry(frame, width=15, font=("Arial", 9))
+            text.pack(pady=(2, 6))
             text.bind("<Return>", self.on_rgb_text_changed)
             self.texts["rgb"].append(text)
 
     def create_hsv_panel(self, parent, column):
         frame = tk.LabelFrame(
-            parent, text=" Модель HSV ", font=("Arial", 11, "bold"), padx=10, pady=10
+            parent, text=" Модель HSV ", font=("Arial", 10, "bold"), padx=8, pady=8
         )
-        frame.grid(row=0, column=column, padx=10, sticky="nsew")
+        frame.grid(row=0, column=column, padx=6, sticky="nsew")
 
         keys = [("Hue", 360), ("Saturation", 100), ("Value", 100)]
         self.sliders["hsv"] = []
@@ -100,19 +101,20 @@ class ColorConverterApp:
 
         for name, max_val in keys:
             unit = "°" if max_val == 360 else "%"
-            tk.Label(frame, text=f"{name} (0-{max_val}{unit}):").pack(anchor="w")
+            tk.Label(frame, text=f"{name} (0-{max_val}{unit}):", font=("Arial", 9)).pack(anchor="w")
             slider = tk.Scale(
                 frame,
                 from_=0,
                 to=max_val,
                 orient=tk.HORIZONTAL,
+                length=180,
                 command=self.on_hsv_slider_changed,
             )
             slider.pack(fill=tk.X)
             self.sliders["hsv"].append(slider)
 
-            text = tk.Entry(frame, width=15)
-            text.pack(pady=5)
+            text = tk.Entry(frame, width=15, font=("Arial", 9))
+            text.pack(pady=(2, 6))
             text.bind("<Return>", self.on_hsv_text_changed)
             self.texts["hsv"].append(text)
 
@@ -120,27 +122,26 @@ class ColorConverterApp:
         frame = tk.LabelFrame(
             parent,
             text=" Управление ",
-            font=("Arial", 11, "bold"),
+            font=("Arial", 10, "bold"),
             padx=10,
-            pady=10,
+            pady=8,
         )
-        frame.grid(row=0, column=column, padx=10, sticky="nsew")
+        frame.grid(row=0, column=column, padx=6, sticky="nsew")
 
         tk.Button(
             frame,
             text="Выбрать из палитры",
             command=self.pick_color_dialog,
-            bg="#e0e0e0",
-            font=("Arial", 10),
-        ).pack(pady=20, fill=tk.X)
+            bg="#e8e8e8",
+            font=("Arial", 9),
+            relief="raised",
+        ).pack(pady=(5, 10), fill=tk.X)
 
-        tk.Label(frame, text="Предпросмотр:").pack(anchor="w", pady=(10, 5))
+        tk.Label(frame, text="Предпросмотр:", font=("Arial", 9)).pack(anchor="w", pady=(2, 4))
         self.color_preview = tk.Canvas(
-            frame, width=130, height=130, bg="blue", highlightthickness=1
+            frame, width=130, height=130, bg="blue", highlightthickness=1, relief="solid"
         )
-        self.color_preview.pack()
-
-
+        self.color_preview.pack(pady=5)
 
     def rgb_to_cmyk(self, r, g, b):
         r_norm, g_norm, b_norm = r / 255.0, g / 255.0, b / 255.0
@@ -205,15 +206,13 @@ class ColorConverterApp:
         b = int(round((b_prime + m) * 255))
         return max(0, min(255, r)), max(0, min(255, g)), max(0, min(255, b))
 
-
-
     def on_rgb_slider_changed(self, event=None):
         if self.is_updating:
             return
         self.rgb_values[0] = self.sliders["rgb"][0].get()
         self.rgb_values[1] = self.sliders["rgb"][1].get()
         self.rgb_values[2] = self.sliders["rgb"][2].get()
-        self.update_all_ui()
+        self.update_all_ui(source="rgb")
 
     def on_rgb_text_changed(self, event=None):
         try:
@@ -223,7 +222,7 @@ class ColorConverterApp:
             self.rgb_values[0] = max(0, min(255, r))
             self.rgb_values[1] = max(0, min(255, g))
             self.rgb_values[2] = max(0, min(255, b))
-            self.update_all_ui()
+            self.update_all_ui(source="rgb")
         except ValueError:
             pass
 
@@ -236,7 +235,7 @@ class ColorConverterApp:
         k = self.sliders["cmyk"][3].get() / 100.0
         r, g, b = self.cmyk_to_rgb(c, m, y, k)
         self.rgb_values = [r, g, b]
-        self.update_all_ui()
+        self.update_all_ui(source="cmyk", cmyk_vals=[c * 100, m * 100, y * 100, k * 100])
 
     def on_cmyk_text_changed(self, event=None):
         try:
@@ -244,14 +243,15 @@ class ColorConverterApp:
             m = float(self.texts["cmyk"][1].get()) / 100.0
             y = float(self.texts["cmyk"][2].get()) / 100.0
             k = float(self.texts["cmyk"][3].get()) / 100.0
-            r, g, b = self.cmyk_to_rgb(
+            c, m, y, k = (
                 max(0.0, min(1.0, c)),
                 max(0.0, min(1.0, m)),
                 max(0.0, min(1.0, y)),
                 max(0.0, min(1.0, k)),
             )
+            r, g, b = self.cmyk_to_rgb(c, m, y, k)
             self.rgb_values = [r, g, b]
-            self.update_all_ui()
+            self.update_all_ui(source="cmyk", cmyk_vals=[c * 100, m * 100, y * 100, k * 100])
         except ValueError:
             pass
 
@@ -263,20 +263,19 @@ class ColorConverterApp:
         v = self.sliders["hsv"][2].get() / 100.0
         r, g, b = self.hsv_to_rgb(h, s, v)
         self.rgb_values = [r, g, b]
-        self.update_all_ui()
+        self.update_all_ui(source="hsv", hsv_vals=[h, s * 100, v * 100])
 
     def on_hsv_text_changed(self, event=None):
         try:
             h = float(self.texts["hsv"][0].get())
             s = float(self.texts["hsv"][1].get()) / 100.0
             v = float(self.texts["hsv"][2].get()) / 100.0
-            r, g, b = self.hsv_to_rgb(
-                max(0.0, min(360.0, h)),
-                max(0.0, min(1.0, s)),
-                max(0.0, min(1.0, v)),
-            )
+            h = max(0.0, min(360.0, h))
+            s = max(0.0, min(1.0, s))
+            v = max(0.0, min(1.0, v))
+            r, g, b = self.hsv_to_rgb(h, s, v)
             self.rgb_values = [r, g, b]
-            self.update_all_ui()
+            self.update_all_ui(source="hsv", hsv_vals=[h, s * 100, v * 100])
         except ValueError:
             pass
 
@@ -287,28 +286,31 @@ class ColorConverterApp:
             self.rgb_values = [int(rgb[0]), int(rgb[1]), int(rgb[2])]
             self.update_all_ui()
 
-
-
-    def update_all_ui(self):
+    def update_all_ui(self, source=None, cmyk_vals=None, hsv_vals=None):
         self.is_updating = True
 
         r, g, b = self.rgb_values
 
-        rgb_vals = [r, g, b]
-        for i in range(3):
-            self.sliders["rgb"][i].set(rgb_vals[i])
-            self.texts["rgb"][i].delete(0, tk.END)
-            self.texts["rgb"][i].insert(0, str(rgb_vals[i]))
+        if source != "rgb":
+            rgb_vals = [r, g, b]
+            for i in range(3):
+                self.sliders["rgb"][i].set(rgb_vals[i])
+                self.texts["rgb"][i].delete(0, tk.END)
+                self.texts["rgb"][i].insert(0, str(rgb_vals[i]))
 
-        c, m, y, k = self.rgb_to_cmyk(r, g, b)
-        cmyk_vals = [c * 100, m * 100, y * 100, k * 100]
+        if source != "cmyk":
+            c, m, y, k = self.rgb_to_cmyk(r, g, b)
+            cmyk_vals = [c * 100, m * 100, y * 100, k * 100]
+
         for i in range(4):
             self.sliders["cmyk"][i].set(cmyk_vals[i])
             self.texts["cmyk"][i].delete(0, tk.END)
             self.texts["cmyk"][i].insert(0, f"{cmyk_vals[i]:.1f}")
 
-        h, s, v = self.rgb_to_hsv(r, g, b)
-        hsv_vals = [h, s * 100, v * 100]
+        if source != "hsv":
+            h, s, v = self.rgb_to_hsv(r, g, b)
+            hsv_vals = [h, s * 100, v * 100]
+
         for i in range(3):
             self.sliders["hsv"][i].set(hsv_vals[i])
             self.texts["hsv"][i].delete(0, tk.END)
@@ -324,5 +326,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = ColorConverterApp(root)
     root.mainloop()
-
-
